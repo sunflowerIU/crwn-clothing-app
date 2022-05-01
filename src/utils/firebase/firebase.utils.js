@@ -1,10 +1,10 @@
 // Import the functions
 import { initializeApp } from "firebase/app";
 import {
-  signInWithRedirect,
   signInWithPopup,
   getAuth,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword
 } from "firebase/auth"; //these are imports required for authentication
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; //these are imports required for firestore
@@ -30,12 +30,12 @@ googleProvider.setCustomParameters({
 
 export const auth = getAuth();  //auth will keep track of authentication process
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider)
 
 
 //for firestore(database)
 const db = getFirestore()
-export const createUserDocumentFromAuth = async(user)=>{
+export const createUserDocumentFromAuth = async(user, additionalInfo='')=>{ //sometimes we dont have displayName of user, in that case we will send displayName from additionalInfo
+  if(!user) return;
     //this is for getting reference of that data from our database so that we can use it to create docs.
     //it contains 3 params first is database, 2nd is collection name and 3rd one is that unique id
     const userDocRef = doc(db,'users',user.uid)  
@@ -53,7 +53,8 @@ export const createUserDocumentFromAuth = async(user)=>{
             await setDoc(userDocRef,{
                 displayName,
                 email,
-                createdAt: new Date()
+                createdAt: new Date(),
+                ...additionalInfo
             })
         } catch (error) {
             console.log(error)
@@ -63,4 +64,11 @@ export const createUserDocumentFromAuth = async(user)=>{
     // but if that doc exists then simply return the user reference
     return userDocRef;
 
+}
+
+
+//to create new authenticated user using email and password only
+export const CreateAuthUserUsingEmailAndPassword = async(email,password) =>{
+  if(!email || !password) return;
+  return await createUserWithEmailAndPassword(auth,email,password)
 }
