@@ -1,21 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
 body {
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
 }
 
-*{
+* {
   box-sizing: inherit;
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
   text-transform: uppercase;
-
 }
