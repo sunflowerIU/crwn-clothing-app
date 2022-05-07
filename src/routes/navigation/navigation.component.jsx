@@ -1,9 +1,21 @@
 import { Outlet, Link } from "react-router-dom";
-import { Fragment } from "react"; //fragment can be use if we dont want to wrap out component with div
+import { Fragment, useContext } from "react"; //fragment can be use if we dont want to wrap out component with div
 import "./navigation.styles.scss";
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
+import { UserContext } from "../../contexts/user.context";
+import { SignOutUser } from "../../utils/firebase/firebase.utils";
 
 const Navigation = () => {
+  //extract currentUser from context
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  console.log(currentUser);
+
+  //to signout user
+  const signOutHandler = async () => {
+    await SignOutUser();
+    setCurrentUser(null);
+  };
+
   return (
     <Fragment>
       <div className="navigation">
@@ -15,9 +27,17 @@ const Navigation = () => {
           <Link className="nav-link" to="/shop">
             Shop
           </Link>
-          <Link className="nav-link" to="/auth">
-            sign in
-          </Link>
+
+          {/* if there is currentUser then show signout in nav otherwise show signin */}
+          {currentUser ? (
+            <Link className="nav-link" onClick={signOutHandler} to='#'>
+              Sign out
+            </Link>
+          ) : (
+            <Link className="nav-link" to="/auth">
+              sign in
+            </Link>
+          )}
         </div>
       </div>
       <Outlet />{" "}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   CreateAuthUserUsingEmailAndPassword,
   createUserDocumentFromAuth,
@@ -6,7 +6,7 @@ import {
 import InputForm from "../input-form/input-form.component";
 import './signup-form.styles.scss'
 import Button from "../button/button.component";
-
+import { UserContext } from "../../contexts/user.context";
 
 //1st. specify default form fields that we need
 const defaultFormFields = {
@@ -17,6 +17,10 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
+
+  //using context for setting current user afer succssfully signup
+  const {setCurrentUser} = useContext(UserContext)
+
   //2nd. then use useState to formfield with defaultFormField we created.
   const [formFields, setFormFields] = useState(defaultFormFields);
 
@@ -44,6 +48,7 @@ const SignUpForm = () => {
         email,
         password
       );
+      setCurrentUser(response.user)  //set currentUser after signUp
       //   console.log(response);
 
       //now create user with that data
@@ -51,6 +56,7 @@ const SignUpForm = () => {
       const createResponse = await createUserDocumentFromAuth(response.user, {
         displayName: displayName,
       });
+      
 
       //if user created successfully then clear input fields
       if (createResponse) {

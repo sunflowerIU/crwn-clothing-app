@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
@@ -8,8 +8,14 @@ import {
 import InputForm from "../input-form/input-form.component";
 import Button from "../button/button.component";
 import "./sign-in.styles.scss";
+import { UserContext } from "../../contexts/user.context";
 
 const SignInForm = () => {
+
+  //using UserContext for setting current user
+  const { setCurrentUser } = useContext(UserContext);
+
+  
   // creating user on database using google popup
   const signInWithGoogle = async () => {
     const response = await signInWithGooglePopup();
@@ -48,7 +54,7 @@ const SignInForm = () => {
     //now lets signin
     try {
       const response = await SignInWithExistingUser(email, password);
-      console.log(response);
+      setCurrentUser(response.user)
       if (response) {
         clearInput();
       }
@@ -86,7 +92,7 @@ const SignInForm = () => {
         />
         <div className="buttons-container">
           <Button type="submit">sign in</Button>
-          <Button type = 'button' onClick={signInWithGoogle} buttonType="google">
+          <Button type="button" onClick={signInWithGoogle} buttonType="google">
             google sign in
           </Button>
         </div>
