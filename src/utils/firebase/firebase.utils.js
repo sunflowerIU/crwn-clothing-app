@@ -6,7 +6,8 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth"; //these are imports required for authentication
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; //these are imports required for firestore
@@ -81,8 +82,12 @@ export const SignInWithExistingUser = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-
 // signout method for signing out
-export const SignOutUser = async() =>{
-  return await signOut(auth)
-}
+export const SignOutUser = async () => {
+  return await signOut(auth);
+};
+
+///function to track auth state(state that occurs when we login or logout)
+export const onAuthStateChangedListener = (callback) => {
+  return onAuthStateChanged(auth, callback);
+};

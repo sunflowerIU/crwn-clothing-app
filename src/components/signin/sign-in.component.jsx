@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
@@ -8,19 +8,15 @@ import {
 import InputForm from "../input-form/input-form.component";
 import Button from "../button/button.component";
 import "./sign-in.styles.scss";
-import { UserContext } from "../../contexts/user.context";
 
 const SignInForm = () => {
 
-  //using UserContext for setting current user
-  const { setCurrentUser } = useContext(UserContext);
 
   
   // creating user on database using google popup
   const signInWithGoogle = async () => {
-    const response = await signInWithGooglePopup();
-    console.log(response);
-    await createUserDocumentFromAuth(response.user);
+    await signInWithGooglePopup();
+    // await createUserDocumentFromAuth(response.user);
   };
 
   // 1. creating default input form field
@@ -54,7 +50,6 @@ const SignInForm = () => {
     //now lets signin
     try {
       const response = await SignInWithExistingUser(email, password);
-      setCurrentUser(response.user)
       if (response) {
         clearInput();
       }
