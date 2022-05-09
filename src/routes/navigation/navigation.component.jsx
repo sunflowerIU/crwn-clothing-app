@@ -8,7 +8,7 @@ import { SignOutUser } from "../../utils/firebase/firebase.utils";
 const Navigation = () => {
   //extract currentUser from context
   const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
+  // console.log(currentUser);
 
 
 
