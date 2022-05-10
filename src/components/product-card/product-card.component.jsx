@@ -1,17 +1,26 @@
 import "./product-card.styles.scss";
 import Button from "../button/button.component";
+import { DropdownContext } from "../../contexts/cart.context";
+import { useContext } from "react";
 
-const ProductCard = ({product}) => {
-  const {imageUrl, price, name} = product
+const ProductCard = ({ product }) => {
+  const { imageUrl, price, name, id } = product;
+  const { addItemsTocart } = useContext(DropdownContext);
 
-    return (
+  const addToCartHandler = () => {
+    addItemsTocart(product);
+  };
+
+  return (
     <div className="product-card-container">
-      <img src={imageUrl} alt={`${name}`}/>
+      <img src={imageUrl} alt={`${name}`} />
       <div className="footer">
         <span className="name">{name}</span>
-        <span className="price">{price}</span>
+        <span className="price">${price}</span>
       </div>
-      <Button buttonType="inverted">Add to cart</Button>
+      <Button buttonType="inverted" handler={addToCartHandler}>
+        Add to cart
+      </Button>
     </div>
   );
 };

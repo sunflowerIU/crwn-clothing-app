@@ -6,7 +6,7 @@ import { CartIcon } from "../../components/cart-icon/cart-icon.component";
 import { CartDropdown } from "../../components/cart-dropdown/cart-dropdown.component";
 import { UserContext } from "../../contexts/user.context";
 import { SignOutUser } from "../../utils/firebase/firebase.utils";
-import { DropdownContext } from "../../contexts/dropdown.context";
+import { DropdownContext } from "../../contexts/cart.context";
 
 const Navigation = () => {
   //extract currentUser from context

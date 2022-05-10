@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom"; //first install react-router-dom
 import { UserProvider } from "./contexts/user.context"; //togive access of context to all children inside it
 import { ProductProvider } from "./contexts/products.context";
-import { DropdownContextProvider } from "./contexts/dropdown.context";
+import { DropdownContextProvider } from "./contexts/cart.context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
