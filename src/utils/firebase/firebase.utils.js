@@ -10,7 +10,16 @@ import {
   onAuthStateChanged,
 } from "firebase/auth"; //these are imports required for authentication
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; //these are imports required for firestore
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+} from "firebase/firestore"; //these are imports required for firestore
 
 //Firebase configuration, all the configuration can be get from firebase browser after creating app there
 const firebaseConfig = {
@@ -90,4 +99,36 @@ export const SignOutUser = async () => {
 ///function to track auth state(state that occurs when we login or logout)
 export const onAuthStateChangedListener = (callback) => {
   return onAuthStateChanged(auth, callback);
+};
+
+//making a function to upload our data to the database, which accepts 2 params, collectionKey is a name that we want for our collection and objectsToAdd are the values that we want to put on it
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  //first creating a reference of collection in our db with collectionKey that we have specified
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db); //writeBatch gives the methods like delete, set, etc.. for the document
+
+  //and then looping through the array of our objectToAdd and creating their doc reference inside collection reference, by keeping their name according to title of that obj
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object); //writeBatch.set adds the object to the document.  code=> (docRef is reference where we need to put our object, and 2nd params is for setting the name of our doc)
+  });
+
+  await batch.commit(); //we should commit to finalize the doc
+  console.log("Done");
+};
+
+//making function to get our collections which  is  categories document
+export const getCategoriesAndDocument = async () => {
+  const collectionRef = collection(db, "categories");
+  const q = query(collectionRef);
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docsSnapshot) => {
+    const { title, items } = docsSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  },{});
+  return categoryMap;
 };

@@ -98,8 +98,6 @@ export const DropdownContextProvider = ({ children }) => {
     setTotalAmount(grandTotal);
   }, [cartItems]);
 
-  //because the quantity of item gets below zero when we decrease them let make a useEffect that runs when
-  // there is change in cartItems and replace quantity of item by  0 when the quantity is less than zero
 
   const value = {
     dropdownActive,
