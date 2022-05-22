@@ -1,6 +1,11 @@
 import { Outlet, Link } from "react-router-dom";
 import { Fragment, useContext } from "react"; //fragment can be use if we dont want to wrap out component with div
-import "./navigation.styles.scss";
+import {
+  NavigationContainer,
+  LogoContainer,
+  NavLinks,
+  NavLink,
+} from "./navigation.styles";
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { CartIcon } from "../../components/cart-icon/cart-icon.component";
 import { CartDropdown } from "../../components/cart-dropdown/cart-dropdown.component";
@@ -16,32 +21,28 @@ const Navigation = () => {
 
   return (
     <Fragment>
-      <div className="navigation">
-        <Link to="/" className="logo-container">
+      <NavigationContainer>
+        <LogoContainer to="/">
           <CrwnLogo />
-        </Link>
+        </LogoContainer>
 
-        <div className="nav-links-container">
-          <Link className="nav-link" to="/shop">
-            Shop
-          </Link>
+        <NavLinks>
+          <NavLink to="/shop">Shop</NavLink>
 
           {/* if there is currentUser then show signout in nav otherwise show signin */}
           {currentUser ? (
-            <Link className="nav-link" onClick={SignOutUser} to="#">
+            <NavLink  onClick={SignOutUser} to="#">
               Sign out
-            </Link>
+            </NavLink>
           ) : (
-            <Link className="nav-link" to="/auth">
-              sign in
-            </Link>
+            <NavLink  to="/auth">sign in</NavLink>
           )}
 
           <CartIcon />
-        </div>
+        </NavLinks>
         {/* only show the dropdown if the dropdownActive is true in context */}
         {dropdownActive && <CartDropdown />}
-      </div>
+      </NavigationContainer>
       <Outlet />{" "}
       {/*outlet ley chai k garxa vani, nested route to sabai component lai yo vitra rakhxa*/}
     </Fragment>

@@ -7,12 +7,10 @@ import {
 
 import InputForm from "../input-form/input-form.component";
 import Button from "../button/button.component";
-import "./sign-in.styles.scss";
+import { BUTTON_TYPE_CLASS } from "../button/button.component";
+import { SigninContainer, ButtonContainer } from "./sign-in.styles";
 
 const SignInForm = () => {
-
-
-  
   // creating user on database using google popup
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
@@ -65,7 +63,7 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="sign-in-container">
+    <SigninContainer>
       <h2>I already have an account</h2>
       <span>signin with your email and password</span>
       <form onSubmit={handleSubmit}>
@@ -85,14 +83,18 @@ const SignInForm = () => {
           required
           onChange={changeHandler}
         />
-        <div className="buttons-container">
+        <ButtonContainer>
           <Button type="submit">sign in</Button>
-          <Button type="button" onClick={signInWithGoogle} buttonType="google">
+          <Button
+            type="button"
+            onClick={signInWithGoogle}
+            buttonType={BUTTON_TYPE_CLASS.google}
+          >
             google sign in
           </Button>
-        </div>
+        </ButtonContainer>
       </form>
-    </div>
+    </SigninContainer>
   );
 };
 

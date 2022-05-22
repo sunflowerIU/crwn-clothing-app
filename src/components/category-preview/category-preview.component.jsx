@@ -1,22 +1,26 @@
-import "./category-preview.styles.scss";
+import {
+  CategoryPreviewContainer,
+  TitleLink,
+  Title,
+  Preview,
+} from "./category-preview.styles.jsx";
 import ProductCard from "../product-card/product-card.component";
 
 const CategoryPreview = ({ title, products }) => {
   return (
-    <div className="category-preview-container">
-      <h2>
-        
-        <span className="title">{ title.toUpperCase()}</span>
-      </h2>
+    <CategoryPreviewContainer>
+      <Title>
+        <TitleLink to={title.toLowerCase()}>{title.toUpperCase()}</TitleLink>
+      </Title>
 
-      <div className="preview">
+      <Preview>
         {products
           .filter((el, index) => index < 4)
           .map((product) => {
             return <ProductCard key={product.id} product={product} />;
           })}
-      </div>
-    </div>
+      </Preview>
+    </CategoryPreviewContainer>
   );
 };
 
