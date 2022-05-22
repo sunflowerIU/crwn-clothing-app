@@ -42,7 +42,7 @@ const SignInForm = () => {
 
   //sign in handler with help of email and password after submit
   const handleSubmit = async (e) => {
-    console.log(email, password);
+    // console.log(email, password);
     e.preventDefault();
 
     //now lets signin

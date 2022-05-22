@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
 
   //first always signout the current user if there is any before setting currentuser again
   // because due to getAuth it tracks the authentication that has before, and it keeps always record of previous auithentication
-  SignOutUser() 
+  // SignOutUser() 
 
   //onAuthStateChangedListener will listen all the auth like signin and signout, and it gives a value called unsubscribe which willstop listening auth
   useEffect(() => {

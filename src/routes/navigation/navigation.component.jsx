@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Fragment, useContext } from "react"; //fragment can be use if we dont want to wrap out component with div
 import {
   NavigationContainer,
