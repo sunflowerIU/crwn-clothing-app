@@ -1,6 +1,8 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useState, useEffect } from "react";
 
 const addCartItem = (cartItems, productToAdd) => {
+  // console.log(cartItems)
+
   //1. find if cartItems already has that product or not
   const findExistingCart = cartItems.find(
     (item) => item.id === productToAdd.id
@@ -22,14 +24,6 @@ const addCartItem = (cartItems, productToAdd) => {
 };
 
 //creating context for cart dropdown and also for cart items
-const initialState = {
-  dropdownActive: false,
-  cartItems: [],
-  totalItemsInCart: 0,
-  totalAmount: 0,
-};
-
-//creating a context for that dropdown
 export const DropdownContext = createContext({
   dropdownActive: false,
   setDropdownState: () => {},
@@ -41,73 +35,20 @@ export const DropdownContext = createContext({
   totalAmount: 0,
 });
 
-//this is necessary because we always dont remember the cases of cart
-const CART_ACTION_TYPES = {
-  SET_CART_ITEMS: "SET_CART_ITEMS",
-  SET_DROPDOWN_STATE: "SET_DROPDOWN_STATE",
-  SET_TOTAL_ITEMS_IN_CART: "SET_TOTAL_ITEMS_IN_CART",
-  SET_TOTAL_AMOUNT: "SET_TOTAL_AMOUNT",
-};
-
-//making a cart reducer
-const CartReducer = (state, action) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case "SET_CART_ITEMS":
-      return { ...state, cartItems: payload };
-    case "SET_DROPDOWN_STATE":
-      return { ...state, dropdownActive: !state.dropdownActive };
-    case "SET_TOTAL_ITEMS_IN_CART":
-      return {
-        ...state,
-        totalItemsInCart: payload,
-      };
-    case "SET_TOTAL_AMOUNT":
-      return {
-        ...state,
-        totalAmount: payload,
-      };
-
-    default:
-      throw new Error(`unhandled type ${type} in userReducer`);
-  }
-};
-
 export const DropdownContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(CartReducer, initialState);
-
-  //to set cart items
-  const setCartItems = (items) => {
-    dispatch({ type: CART_ACTION_TYPES.SET_CART_ITEMS, payload: items });
-  };
-
-  //to set total items in cart
-  const setTotalItemsInCart = (total) => {
-    dispatch({
-      type: CART_ACTION_TYPES.SET_TOTAL_ITEMS_IN_CART,
-      payload: total,
-    });
-  };
-
-  //to set total amount in cart
-  const setTotalAmount = (total) => {
-    dispatch({ type: CART_ACTION_TYPES.SET_TOTAL_AMOUNT, payload: total });
-  };
-
-  //to set dropdown state
-  const setDropdownState = () => {
-    dispatch({ type: CART_ACTION_TYPES.SET_DROPDOWN_STATE });
-  };
+  const [dropdownActive, setDropdownState] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [totalItemsInCart, setTotalItemsInCart] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   //function to add items to cart
   const addItemsTocart = (productToAdd) => {
-    setCartItems(addCartItem(state.cartItems, productToAdd));
+    setCartItems(addCartItem(cartItems, productToAdd));
   };
 
   //creating function to remove the item from cart during checkout
   const removeItemFromCart = (itemToBeRemoved) => {
-    const filteredCartItem = state.cartItems.filter((item) => {
+    const filteredCartItem = cartItems.filter((item) => {
       return item.id !== itemToBeRemoved.id;
     });
     setCartItems(filteredCartItem);
@@ -117,14 +58,14 @@ export const DropdownContextProvider = ({ children }) => {
   const decreaseItemByOne = (currentItem) => {
     // if quantity of the current item is 1 then remove the item from cartItems, because we cannot have quantity less than 1
     if (currentItem.quantity === 1) {
-      const filteredCartItems = state.cartItems.filter(
+      const filteredCartItems = cartItems.filter(
         (item) => item.id !== currentItem.id
       );
       return setCartItems(filteredCartItems);
     }
 
     //if quantity is not less than 1 then simply decrease quantity by one
-    const updatedCartItems = state.cartItems.map((item) => {
+    const updatedCartItems = cartItems.map((item) => {
       return item.id === currentItem.id
         ? { ...item, quantity: item.quantity - 1 }
         : item;
@@ -134,16 +75,16 @@ export const DropdownContextProvider = ({ children }) => {
 
   //function to calculate total items in cart
   useEffect(() => {
-    const totalItems = state.cartItems.reduce(
+    const totalItems = cartItems.reduce(
       (total, cartItem) => total + cartItem.quantity,
       0
     );
     setTotalItemsInCart(totalItems);
-  }, [state.cartItems]);
+  }, [cartItems]);
 
   //function to calculate total amount
   useEffect(() => {
-    const checkoutItems = state.cartItems.map((item) => {
+    const checkoutItems = cartItems.map((item) => {
       return { quantity: item.quantity, price: item.price };
     });
     const totalArray = checkoutItems.map((item) => {
@@ -155,10 +96,8 @@ export const DropdownContextProvider = ({ children }) => {
     // console.log(checkoutItems)
     // console.log(grandTotal);
     setTotalAmount(grandTotal);
-  }, [state.cartItems]);
+  }, [cartItems]);
 
-  //destructuring all the variables from our state
-  const { dropdownActive, cartItems, totalItemsInCart, totalAmount } = state;
   const value = {
     dropdownActive,
     setDropdownState,
