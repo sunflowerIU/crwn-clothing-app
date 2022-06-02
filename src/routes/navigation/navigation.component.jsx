@@ -9,13 +9,18 @@ import {
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { CartIcon } from "../../components/cart-icon/cart-icon.component";
 import { CartDropdown } from "../../components/cart-dropdown/cart-dropdown.component";
-import { UserContext } from "../../contexts/user.context";
+// import { UserContext } from "../../contexts/user.context";
 import { SignOutUser } from "../../utils/firebase/firebase.utils";
 import { DropdownContext } from "../../contexts/cart.context";
+import { useSelector } from "react-redux";
+
+
 
 const Navigation = () => {
+  //useSelector is a hook to get the value from our store
+  const currentUser = useSelector(state=>state.user.currentUser)
   //extract currentUser from context
-  const { currentUser } = useContext(UserContext);
+  // const { currentUser } = useContext(UserContext);
   // console.log(currentUser);
   const { dropdownActive } = useContext(DropdownContext);
 
