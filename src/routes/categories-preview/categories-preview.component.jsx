@@ -2,30 +2,18 @@
 // import { CategoriesContext } from "../../contexts/categories.context";
 import CategoryPreview from "../../components/category-preview/category-preview.component";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { setCategoriesMap } from "../../store/categories/categories.reducer";
-import { getCategoriesAndDocument } from "../../utils/firebase/firebase.utils";
-import { useDispatch } from "react-redux";
+
 
 export const CategoriesPreview = () => {
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const getCategoriesMap = async () => {
-      const categoriesMap = await getCategoriesAndDocument();
-      //dispatching for categories items to be obtained into the state of it reducer
-      return dispatch(setCategoriesMap(categoriesMap));
-    };
-    getCategoriesMap();
-  }, []);
-
-  const categoriesMap = useSelector((state) => state.categories.categoriesMap);
+  const categories = useSelector((state) => state.categories.categories);
+  console.log(categories)
   return (
     <div className="shop-container">
-      {Object.keys(categoriesMap).map((title) => {
-        const products = categoriesMap[title];
+      {categories.map((product) => {
+        const products = product.items;
         return (
-          <CategoryPreview key={title} title={title} products={products} />
+          <CategoryPreview key={product.title} title={product.title} products={products} />
         );
       })}
     </div>

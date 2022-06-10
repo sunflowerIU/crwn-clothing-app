@@ -12,6 +12,7 @@ import {
 import { SET_CURRENT_USER as setCurrentUser } from "./store/user/user.reducer";
 import { useDispatch } from "react-redux";
 
+
 const App = () => {
   //usedispatch is a react-redux hook that will dispatch action same as reducer, dispatch will send the action to root reducer where it will send to all reducer
   //onAuthStateChangedListener will listen all the auth like signin and signout, and it gives a value called unsubscribe which willstop listening auth
@@ -26,6 +27,7 @@ const App = () => {
       //if user is not available like after signout then set currentuser to null, if existing user is available then set current user to that user
       dispatch(setCurrentUser(user));
     });
+
     return unsubscribe;
   }, [dispatch]);
 

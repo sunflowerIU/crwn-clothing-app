@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState } from "react";
 // import { CategoriesContext } from "../../contexts/categories.context";
 import ProductCard from "../../components/product-card/product-card.component";
 import { useSelector } from "react-redux";
+import { selectCategoriesMap } from "../../store/categories/category.selector.js";
 
 const Category = () => {
   console.log("category component rendering");
@@ -11,12 +12,11 @@ const Category = () => {
   const [products, setProducts] = useState([]);
   // const { categoriesMap } = useContext(CategoriesContext);
   console.log("useSelector for categoriesMap");
-  const categoriesMap = useSelector((state) => state.categories.categoriesMap);
-
+  const categories = useSelector(selectCategoriesMap);
   useEffect(() => {
-    console.log('use effect triggered')
-    setProducts(categoriesMap[category]);
-  }, [categoriesMap, category]);
+    console.log("use effect triggered");
+    setProducts(categories[category]);
+  }, [categories, category]);
   return (
     <Fragment>
       <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
