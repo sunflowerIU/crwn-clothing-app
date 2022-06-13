@@ -22,7 +22,8 @@ const Navigation = () => {
   //extract currentUser from context
   // const { currentUser } = useContext(UserContext);
   // console.log(currentUser);
-  const { dropdownActive } = useContext(DropdownContext);
+  // const { dropdownActive } = useContext(DropdownContext);
+  const dropdownActive = useSelector(state=>state.cart.dropdownActive)
 
   return (
     <Fragment>

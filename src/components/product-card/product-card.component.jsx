@@ -4,16 +4,19 @@ import {
   ProductName,
   ProductPrice,
 } from "./product-card.styles";
-import { DropdownContext } from "../../contexts/cart.context";
-import { useContext } from "react";
+// import { DropdownContext } from "../../contexts/cart.context";
+// import { useContext } from "react";
 import Button from "../button/button.component";
+import {addItemsTocart} from '../../store/cart/cart.reducer'
+import { useDispatch } from "react-redux";
 
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch()
   const { imageUrl, price, name, id } = product;
-  const { addItemsTocart } = useContext(DropdownContext);
+  // const { addItemsTocart } = useContext(DropdownContext);
 
   const addToCartHandler = () => {
-    addItemsTocart(product);
+    dispatch(addItemsTocart(product));
   };
 
   return (

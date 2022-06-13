@@ -3,20 +3,22 @@ import {
   CartIconContainer,
   ItemsCount,
 } from "./cart-icon.styles.jsx";
-import { useContext } from "react";
-import { DropdownContext } from "../../contexts/cart.context";
 
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setDropdownState } from "../../store/cart/cart.reducer.js";
 export const CartIcon = () => {
-  const { dropdownActive, setDropdownState, totalItemsInCart } =
-    useContext(DropdownContext);
+  const dispatch = useDispatch();
+  const cartItemsCount = useSelector((state) => state.cart.totalItemsInCart);
+
   const dropdownHandler = () => {
     //if the dropdownActive is true then set it to false and set it to true if it is false
-    setDropdownState(!dropdownActive);
+    dispatch(setDropdownState());
   };
   return (
-    <CartIconContainer  onClick={dropdownHandler}>
-      <ShoppingIcon/>
-      <ItemsCount>{totalItemsInCart}</ItemsCount>
+    <CartIconContainer onClick={dropdownHandler}>
+      <ShoppingIcon />
+      <ItemsCount>{cartItemsCount}</ItemsCount>
     </CartIconContainer>
   );
 };

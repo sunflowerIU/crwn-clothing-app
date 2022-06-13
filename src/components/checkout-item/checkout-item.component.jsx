@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { DropdownContext } from "../../contexts/cart.context";
+
 import {
   CheckoutItemContainer,
   ImageContainer,
@@ -10,25 +9,30 @@ import {
   QuantityValue,
   RemoveButton,
 } from "./checkout-item.styles";
+import { decrease_Item_By_One_action } from "../../store/cart/cart.action";
+import { useDispatch } from "react-redux";
+import { removeItemFromCart } from "../../store/cart/cart.reducer";
+import { addItemsTocart } from "../../store/cart/cart.reducer";
 
 const CheckoutItem = ({ cartItem }) => {
+  const dispatch = useDispatch()
   const { name, imageUrl, quantity, price } = cartItem;
-  const { removeItemFromCart, addItemsTocart, decreaseItemByOne } =
-    useContext(DropdownContext);
 
   //1. remove the item from cart
   const removeThisItem = () => {
-    return removeItemFromCart(cartItem);
+    return dispatch(removeItemFromCart(cartItem));
   };
 
   //2. increase item by 1
   const increaseItem = () => {
-    return addItemsTocart(cartItem);
+    return dispatch(addItemsTocart(cartItem));
   };
 
   //3. decrease item by 1
   const decreaseItem = () => {
-    return decreaseItemByOne(cartItem);
+    // return dispatch(decreaseItemByOne(cartItem));
+    return decrease_Item_By_One_action(cartItem)
+
   };
   return (
     <CheckoutItemContainer>
