@@ -4,20 +4,21 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom"; //first install react-router-dom
-import { DropdownContextProvider } from "./contexts/cart.context";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+import { persistor } from "./store/store";
+import { PersistGate } from "redux-persist/integration/react"; //this a gate which enables to use persisted store to the app. and loading helps to delay  and show anything until the store is persisted
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-            <DropdownContextProvider>
-              <App />
-            </DropdownContextProvider>
+        <App />
       </BrowserRouter>
-    </Provider>
+    </PersistGate>
+  </Provider>
   // </React.StrictMode>
 );
 

@@ -1,38 +1,32 @@
 // import { compose, applyMiddleware } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
-import logger from "redux-logger";
+// import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
+import { myMiddleware } from "./middleware/myLoggerMiddleware"; //our custom middleware
+//using redux persist. to persist store and reducer into local storage
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage"; //default location as localstorage of web
 
-//middleware runs after we dispatch the action but runs before hitting the reducer, and it help to runs logger of the redux that contains all logs
-// const middlewares = [logger]; //keep logger in middleware because we can also keep other middleware inside brackets
-
-// //composed enhancers are function wehre we can keep more than one functions to run them as single fuctions
-// const composedEnhancers = compose(applyMiddleware(...middlewares));
-
-//creating our own middleware. we need to use functional programming concepts where the function return another function and that returns another function
-const myMiddleware = (store) => (next) => (action) => {
-  if (!action.type) {
-    return next(action);
-  }
-
-  console.log("type: ", action.type);
-  console.log("payload: ", action.payload);
-  console.log("currentState: ", store.getState());
-
-  //next will take the action to the next middleware or to the reducers directly
-  next(action);
-
-  //after the action has been submitted to the reducers, then log the store state
-  console.log("next state: ", store.getState());
+//1. create config file for persist
+const persistConfig = {
+  key: "root", //can be any string
+  storage,
+  blacklist: ["user"], //to not persist user reducer, but persist all other reducer
 };
+
+//2. create persisted reducer for persisting reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // createStore(reducer, [preloadedState], [enhancer]) //note any params in square brackets [] means they are optional
 //it contains 3 params 1st is reducer, 2nd is any other optional default state, and 3rd is any third party enhancers like middleware etc..
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer, //3. put that persisted reducer on the reducer.
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
     }).concat(myMiddleware);
   },
 });
+
+//4. now persist the whole store and export it
+export const persistor = persistStore(store);
