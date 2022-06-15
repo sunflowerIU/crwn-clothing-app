@@ -1,21 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import { CategoriesPreview } from "../../routes/categories-preview/categories-preview.component";
 import Category from "../../routes/category/category.component";
-import { getCategoriesAndDocument } from "../../utils/firebase/firebase.utils";
-import { setCategories } from "../../store/categories/categories.reducer";
+import { fetchCategoryAsync } from "../../store/categories/category.action";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export const Shop = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    //for getting categories map into the store
-    const getCategories = async () => {
-      const categories = await getCategoriesAndDocument();
-      //dispatching for categories items to be obtained into the state of it reducer
-      return dispatch(setCategories(categories));
-    };
-    getCategories();
+    ///dispatch the fetchCategoryAsync, and dispatch will be passed into this function, and mini function inside this function can also use dispatch
+    dispatch(fetchCategoryAsync);
   });
   return (
     <Routes>

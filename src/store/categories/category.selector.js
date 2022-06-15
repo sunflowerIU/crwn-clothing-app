@@ -5,7 +5,6 @@ import { createSelector } from "reselect";
 //select a reducer. its like taking a value
 const selectCategoryReducer = (state) => state.categories;
 
-
 //then keep that reducer inside the createSelector and 2nd params is a function for same categoryReducer
 export const categoriesSelector = createSelector(
   selectCategoryReducer,
@@ -13,7 +12,6 @@ export const categoriesSelector = createSelector(
     return categoryReducer.categories; //return categories map
   }
 );
-
 
 ////then create selector with that map and perform some computation
 export const selectCategoriesMap = createSelector(
@@ -23,7 +21,15 @@ export const selectCategoriesMap = createSelector(
       const { title, items } = category;
       acc[title.toLowerCase()] = items;
       return acc;
-    },{});
+    }, {});
+  }
+);
+
+///to create selector for isLoading
+export const selectIsLoading = createSelector(
+  selectCategoryReducer,
+  (categoryReducer) => {
+    return categoryReducer.loading;
   }
 );
 

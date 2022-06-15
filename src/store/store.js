@@ -21,6 +21,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 //it contains 3 params 1st is reducer, 2nd is any other optional default state, and 3rd is any third party enhancers like middleware etc..
 export const store = configureStore({
   reducer: persistedReducer, //3. put that persisted reducer on the reducer.
+  devTools: process.env.NODE_ENV !== "production", //it accepts boolean(default is true), this code says when we are not in production(i.e devtools) then only we can use redux devtools on browser using chrome extension
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,

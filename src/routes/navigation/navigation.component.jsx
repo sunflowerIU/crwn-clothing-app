@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Fragment, useContext } from "react"; //fragment can be use if we dont want to wrap out component with div
+import { Fragment } from "react"; //fragment can be use if we dont want to wrap out component with div
 import {
   NavigationContainer,
   LogoContainer,
@@ -9,9 +9,7 @@ import {
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { CartIcon } from "../../components/cart-icon/cart-icon.component";
 import { CartDropdown } from "../../components/cart-dropdown/cart-dropdown.component";
-// import { UserContext } from "../../contexts/user.context";
 import { SignOutUser } from "../../utils/firebase/firebase.utils";
-import { DropdownContext } from "../../contexts/cart.context";
 import { useSelector } from "react-redux";
 
 
