@@ -5,14 +5,11 @@ import Authentication from "./components/authentication/authentication.component
 import { Shop } from "./components/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { useEffect } from "react";
-import {
-  createUserDocumentFromAuth,
-  onAuthStateChangedListener,
-} from "./utils/firebase/firebase.utils";
-import { SET_CURRENT_USER as setCurrentUser } from "./store/user/user.reducer";
+import { checkUserSession } from "./store/user/user.reducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { setTotalItemsInCart } from "./store/cart/cart.reducer";
+
 
 const App = () => {
   //usedispatch is a react-redux hook that will dispatch action same as reducer, dispatch will send the action to root reducer where it will send to all reducer
@@ -20,17 +17,9 @@ const App = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener(async (user) => {
-      if (user) {
-        //if there is user when new signup then save that user into database
-        await createUserDocumentFromAuth(user);
-      }
-
-      //if user is not available like after signout then set currentuser to null, if existing user is available then set current user to that user
-      dispatch(setCurrentUser(user));
-    });
-
-    return unsubscribe;
+    // getCurrentUser().then(user=>console.log(user))
+    dispatch(checkUserSession())
+    
   }, [dispatch]);
 
   //function to calculate total items in cart

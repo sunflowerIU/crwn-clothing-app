@@ -46,6 +46,7 @@ export const signInWithGooglePopup = () =>
 
 //for firestore(database)
 const db = getFirestore();
+
 export const createUserDocumentFromAuth = async (user, additionalInfo = "") => {
   //sometimes we dont have displayName of user, in that case we will send displayName from additionalInfo
   if (!user) return;
@@ -75,7 +76,7 @@ export const createUserDocumentFromAuth = async (user, additionalInfo = "") => {
   }
 
   // but if that doc exists then simply return the user reference
-  return userDocRef;
+  return userSnapShot;
 };
 
 //to create new authenticated user using email and password only
@@ -125,7 +126,19 @@ export const getCategoriesAndDocument = async () => {
   const collectionRef = collection(db, "categories");
   const q = query(collectionRef);
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(docs=>docs.data()) ///returns array of category
+  return querySnapshot.docs.map((docs) => docs.data()); ///returns array of category
+};
 
-  
+//this function will get current user
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        resolve(user);
+      },
+      reject
+    );
+    return unsubscribe;
+  });
 };

@@ -1,20 +1,19 @@
 import { useState } from "react";
 import {
-  signInWithGooglePopup,
-  createUserDocumentFromAuth,
-  SignInWithExistingUser,
-} from "../../utils/firebase/firebase.utils";
-
+  googleSignInStart,
+  emailSignInStart,
+} from "../../store/user/user.reducer";
+import { useDispatch } from "react-redux";
 import InputForm from "../input-form/input-form.component";
 import Button from "../button/button.component";
 import { BUTTON_TYPE_CLASS } from "../button/button.component";
 import { SigninContainer, ButtonContainer } from "./sign-in.styles";
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
   // creating user on database using google popup
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
-    // await createUserDocumentFromAuth(response.user);
+    dispatch(googleSignInStart());
   };
 
   // 1. creating default input form field
@@ -44,22 +43,11 @@ const SignInForm = () => {
   const handleSubmit = async (e) => {
     // console.log(email, password);
     e.preventDefault();
-
+    const data = { email, password };
     //now lets signin
-    try {
-      const response = await SignInWithExistingUser(email, password);
-      if (response) {
-        clearInput();
-      }
-    } catch (error) {
-      if (error.message === "Firebase: Error (auth/user-not-found).") {
-        alert("User not found");
-      }
-      if (error.message === "Firebase: Error (auth/wrong-password).") {
-        alert("Wrong Password");
-      }
-      console.log(error.message);
-    }
+    dispatch(emailSignInStart(data));
+    clearInput()
+   
   };
 
   return (
