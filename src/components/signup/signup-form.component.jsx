@@ -1,11 +1,9 @@
 import { useState } from "react";
-import {
-  CreateAuthUserUsingEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils";
 import InputForm from "../input-form/input-form.component";
 import {SignupContainer} from "./signup-form.styles";
 import Button from "../button/button.component";
+import { emailSignUpStart } from "../../store/user/user.reducer";
+import {useDispatch} from 'react-redux'
 
 //1st. specify default form fields that we need
 const defaultFormFields = {
@@ -16,6 +14,9 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
+  const dispatch = useDispatch()
+
+
   //2nd. then use useState to formfield with defaultFormField we created.
   const [formFields, setFormFields] = useState(defaultFormFields);
 
@@ -37,29 +38,30 @@ const SignUpForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== passwordConfirm) return alert("password do not match");
+    const data = {displayName,email,password}
+    dispatch(emailSignUpStart(data))
+    // try {
+    //   const response = await CreateAuthUserUsingEmailAndPassword(
+    //     email,
+    //     password
+    //   );
+    //   //   console.log(response);
 
-    try {
-      const response = await CreateAuthUserUsingEmailAndPassword(
-        email,
-        password
-      );
-      //   console.log(response);
+    //   //now create user with that data
+    //   if (!response.user) return;
+    //   await createUserDocumentFromAuth(response.user, {
+    //     displayName: displayName,
+    //   });
 
-      //now create user with that data
-      if (!response.user) return;
-      await createUserDocumentFromAuth(response.user, {
-        displayName: displayName,
-      });
-
-      //if user created successfully then clear input fields
-      clearInputFields();
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        alert("Email already in use, please choose another one.");
-      } else {
-        console.log(error);
-      }
-    }
+    //   //if user created successfully then clear input fields
+    //   clearInputFields();
+    // } catch (error) {
+    //   if (error.code === "auth/email-already-in-use") {
+    //     alert("Email already in use, please choose another one.");
+    //   } else {
+    //     console.log(error);
+    //   }
+    // }
   };
 
   return (

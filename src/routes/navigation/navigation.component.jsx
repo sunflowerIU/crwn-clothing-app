@@ -9,19 +9,21 @@ import {
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { CartIcon } from "../../components/cart-icon/cart-icon.component";
 import { CartDropdown } from "../../components/cart-dropdown/cart-dropdown.component";
-import { SignOutUser } from "../../utils/firebase/firebase.utils";
+// import { SignOutUser } from "../../utils/firebase/firebase.utils";
 import { useSelector } from "react-redux";
-
-
+import { useDispatch } from "react-redux";
+import { signOutStart } from "../../store/user/user.reducer";
 
 const Navigation = () => {
   //useSelector is a hook to get the value from our store
-  const currentUser = useSelector(state=>state.user.currentUser)
-  //extract currentUser from context
-  // const { currentUser } = useContext(UserContext);
-  // console.log(currentUser);
-  // const { dropdownActive } = useContext(DropdownContext);
-  const dropdownActive = useSelector(state=>state.cart.dropdownActive)
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const dropdownActive = useSelector((state) => state.cart.dropdownActive);
+
+  const dispatch = useDispatch();
+
+  const SignOutUser = () => {
+    dispatch(signOutStart());
+  };
 
   return (
     <Fragment>
@@ -35,11 +37,11 @@ const Navigation = () => {
 
           {/* if there is currentUser then show signout in nav otherwise show signin */}
           {currentUser ? (
-            <NavLink  onClick={SignOutUser} to="#">
+            <NavLink onClick={SignOutUser} to="#">
               Sign out
             </NavLink>
           ) : (
-            <NavLink  to="/auth">sign in</NavLink>
+            <NavLink to="/auth">sign in</NavLink>
           )}
 
           <CartIcon />

@@ -5,12 +5,20 @@ import {
   signInFailed,
   signInSuccess,
   emailSignInStart,
+  emailSignUpStart,
+  signUpSuccess,
+  signUpFailed,
+  signOutSuccess,
+  signOutFailed,
+  signOutStart,
 } from "./user.reducer";
 import {
   createUserDocumentFromAuth,
   getCurrentUser,
   signInWithGooglePopup,
   SignInWithExistingUser,
+  CreateAuthUserUsingEmailAndPassword,
+  SignOutUser,
 } from "../../utils/firebase/firebase.utils";
 ////A....handling for google signin
 
@@ -43,6 +51,7 @@ export function* isUserAuthenticated() {
 
     if (!userAuth) return;
     //if user exists then we need to verify the user in database
+    console.log(userAuth);
     yield call(getSnapshotFromUserAuth, userAuth);
   } catch (error) {
     yield put(checkUserSession(null));
@@ -79,30 +88,91 @@ export function* signInWithEmail({ payload }) {
   }
 }
 
-////////this function are for running a function when dispatched
-// when the checkUserSession is dispatched the run isUserAuthenticated
+////////////C. signup with email and password
+export function* signUpWithEmail({ payload }) {
+  try {
+    const { displayName, email, password } = payload;
+    //a. CreateAuthUserUsingEmailAndPassword will only create acc with email and password but doesnot include displayname
+    //it will only create authentication but does not save our acc on database
+    const { user } = yield call(
+      CreateAuthUserUsingEmailAndPassword,
+      email,
+      password
+    );
+    console.log(user);
+    if (!user) return;
+
+    yield put(signUpSuccess({ user, displayName }));
+  } catch (error) {
+    console.log(error);
+    yield put(signUpFailed(error));
+  }
+}
+
+////////////D. when signup is successed
+export function* signInAfterSignUp({ payload }) {
+  const { displayName } = payload;
+  const user = payload.user;
+  // console.log(displayName,user)
+  // getSnapshotFromUserAuth will verify the user and saves to store as current user
+  yield call(getSnapshotFromUserAuth, user, { displayName });
+}
+
+//////E. for siginingout the user
+export function* signOut() {
+  try {
+    yield call(SignOutUser); //call firebase signout method
+
+    //if success then call signOutSuccess reducer method
+    yield put(signOutSuccess());
+  } catch (error) {
+    yield put(signOutFailed(error));
+  }
+}
+
+////////this function are for running a function when dispatched////////////////////
+
+//1. when the checkUserSession is dispatched the run isUserAuthenticated
 export function* onCheckUserSession() {
   yield takeLatest(checkUserSession, isUserAuthenticated);
 }
 
 //for google signin i will mark steps with a,b,c
-// when googleSignInStart is dispatched then call signInWithGoogle
+// 2. when googleSignInStart is dispatched then call signInWithGoogle
 export function* onGoogleSignInstart() {
   yield takeLatest(googleSignInStart, signInWithGoogle);
 }
 
 //for signIn with email and password i will mark steps with capital A,B,C
-//this is will when emailSignInStart is dispatched
+//3. this is will run when emailSignInStart is dispatched
 export function* onEmailSignInStart() {
   yield takeLatest(emailSignInStart, signInWithEmail);
 }
 
+//4. this function will run when emailSignUpStart is dispatched
+export function* onEmailSignUpStart() {
+  yield takeLatest(emailSignUpStart, signUpWithEmail);
+}
+
+// 5. this function will run when signUpSuccess is dispatched
+export function* onSignUpSuccess() {
+  yield takeLatest(signUpSuccess, signInAfterSignUp);
+}
+
+//6. this function will run when signOutStart is dispatched
+export function* onSignOutStart() {
+  yield takeLatest(signOutStart, signOut);
+}
+
 //these are the wathchers
-// export the function which runs all the function
+//4. export the function which runs all the function
 export function* userSaga() {
   yield all([
     call(onCheckUserSession),
     call(onGoogleSignInstart),
     call(onEmailSignInStart),
+    call(onEmailSignUpStart),
+    call(onSignUpSuccess),
+    call(onSignOutStart),
   ]);
 }
