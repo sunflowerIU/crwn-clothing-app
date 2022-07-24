@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { SpinnerContainer } from "../spinner/spinner.styles";
 
 //base button
 export const BaseButton = styled.button`
@@ -18,6 +19,7 @@ export const BaseButton = styled.button`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: white;
@@ -48,3 +50,10 @@ border: 1px solid black;
   color: white;
   border: none;
 `;
+
+
+//making spinner for only button
+export const ButtonSpinner = styled(SpinnerContainer)`
+height:30px;
+width:30px
+`

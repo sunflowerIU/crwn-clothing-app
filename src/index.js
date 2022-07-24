@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { persistor } from "./store/store";
 import { PersistGate } from "redux-persist/integration/react"; //this a gate which enables to use persisted store to the app. and loading helps to delay  and show anything until the store is persisted
+import { Elements } from "@stripe/react-stripe-js"; //this will give access to our app of all stripe elements
+import { stripePromise } from "./utils/stripe/stripe.utils";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,7 +17,9 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <App />
+        <Elements stripe={stripePromise}>
+          <App />
+        </Elements>
       </BrowserRouter>
     </PersistGate>
   </Provider>
